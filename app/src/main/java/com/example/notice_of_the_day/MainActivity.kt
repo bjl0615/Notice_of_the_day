@@ -3,7 +3,13 @@ package com.example.notice_of_the_day
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
 import java.io.BufferedReader
+import java.io.IOException
 import java.io.InputStreamReader
 import java.io.PrintWriter
 import java.lang.Exception
@@ -14,6 +20,28 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val client = OkHttpClient()
+
+        val request : Request = Request.Builder()
+            .url("http://192.168.219.104:8080")
+            .build()
+
+        val callback = object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e("Client" , e.toString())
+            }
+            override fun onResponse(call: Call, response: Response) {
+
+                if(response.isSuccessful) {
+                    Log.e("Client", "${response.body?.string()}")
+                }
+
+            }
+        }
+
+        client.newCall(request).equals(callback)
+
+        /*
         Thread {
             try {
                 val socket = Socket("10.0.2.2",8080)
@@ -40,6 +68,6 @@ class MainActivity : AppCompatActivity() {
 
 
         }.start()
-
+        */
     }
 }
